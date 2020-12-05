@@ -5,9 +5,9 @@ import (
 	"io/ioutil"
 	"log"
 	"path/filepath"
-	"strings"
+	"regexp"
 	"strconv"
-    "regexp"
+	"strings"
 )
 
 type Passport struct {
@@ -53,56 +53,56 @@ func verifyMinMax(value int, min int, max int) bool {
 }
 
 func verifyData(passport map[string]string) bool {
-    // Verify byr
+	// Verify byr
 	byr, err := strconv.Atoi(passport["byr"])
 	if err != nil || !verifyMinMax(byr, 1920, 2002) {
 		return false
 	}
-    // Verify iyr
+	// Verify iyr
 	iyr, err := strconv.Atoi(passport["iyr"])
 	if err != nil || !verifyMinMax(iyr, 2010, 2020) {
 		return false
 	}
-    // Verify eyr
+	// Verify eyr
 	eyr, err := strconv.Atoi(passport["eyr"])
-	if err != nil || !verifyMinMax(eyr, 2020, 2030){
+	if err != nil || !verifyMinMax(eyr, 2020, 2030) {
 		return false
 	}
-    // Verify hgt
-    hgtMatch, _ := regexp.MatchString("^[0-9]{1,3}(in|cm)", passport["hgt"])
-    if !hgtMatch {
-    	return false
-    }
-    if strings.ContainsAny(passport["hgt"], "cm") {
-    	passport["hgt"] = strings.Replace(passport["hgt"], "cm", "", 1)
-    	hgt, _ := strconv.Atoi(passport["hgt"])
-        if !verifyMinMax(hgt, 150, 193) {
-        	return false
-        }
-    } else if strings.ContainsAny(passport["hgt"], "in") {
-    	passport["hgt"] = strings.Replace(passport["hgt"], "in", "", 1)
-    	hgt, _ := strconv.Atoi(passport["hgt"])
-        if !verifyMinMax(hgt, 59, 76) {
-        	return false
-        }
-    }
-    // Verify hcl
-    hclMatch, _ := regexp.MatchString("^#[0-9|a-f]{6}$", passport["hcl"])
-    if !hclMatch {
-    	return false
-    }
-    // Verify ecl
-    eclMatch, _ := regexp.MatchString("^(amb|blu|brn|gry|grn|hzl|oth)$", passport["ecl"])
-    if !eclMatch {
-    	return false
-    }
-    // Verify pic
-    picMatch, _ := regexp.MatchString("^[0-9]{9}$", passport["pid"])
-    if !picMatch {
-    	return false
-    }
+	// Verify hgt
+	hgtMatch, _ := regexp.MatchString("^[0-9]{1,3}(in|cm)", passport["hgt"])
+	if !hgtMatch {
+		return false
+	}
+	if strings.ContainsAny(passport["hgt"], "cm") {
+		passport["hgt"] = strings.Replace(passport["hgt"], "cm", "", 1)
+		hgt, _ := strconv.Atoi(passport["hgt"])
+		if !verifyMinMax(hgt, 150, 193) {
+			return false
+		}
+	} else if strings.ContainsAny(passport["hgt"], "in") {
+		passport["hgt"] = strings.Replace(passport["hgt"], "in", "", 1)
+		hgt, _ := strconv.Atoi(passport["hgt"])
+		if !verifyMinMax(hgt, 59, 76) {
+			return false
+		}
+	}
+	// Verify hcl
+	hclMatch, _ := regexp.MatchString("^#[0-9|a-f]{6}$", passport["hcl"])
+	if !hclMatch {
+		return false
+	}
+	// Verify ecl
+	eclMatch, _ := regexp.MatchString("^(amb|blu|brn|gry|grn|hzl|oth)$", passport["ecl"])
+	if !eclMatch {
+		return false
+	}
+	// Verify pic
+	picMatch, _ := regexp.MatchString("^[0-9]{9}$", passport["pid"])
+	if !picMatch {
+		return false
+	}
 
-    return true
+	return true
 }
 
 // Count the number of passports that are have all required fields
@@ -120,7 +120,7 @@ func partOne(inputVal []string) (int, int) {
 			valid++
 		}
 	}
-    invalid := len(inputVal) - valid
+	invalid := len(inputVal) - valid
 	return valid, invalid
 }
 
@@ -142,7 +142,7 @@ func partTwo(inputVal []string) (int, int) {
 			valid++
 		}
 	}
-    invalid := len(inputVal) - valid
+	invalid := len(inputVal) - valid
 	return valid, invalid
 }
 
