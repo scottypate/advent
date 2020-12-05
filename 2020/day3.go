@@ -6,7 +6,6 @@ import (
 	"log"
 	"path/filepath"
 	"strings"
-	// "strconv"
 )
 
 type Coordinates struct {
