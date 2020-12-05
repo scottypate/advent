@@ -10,10 +10,6 @@ import (
 	"strings"
 )
 
-type Passport struct {
-	byr int
-}
-
 // Read the input file.
 func getInput() []string {
 	filepath, err := filepath.Abs("2020/inputs/day4.txt")
