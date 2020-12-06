@@ -62,5 +62,5 @@ func partTwo(inputVal []string) int {
 func main() {
 	inputVal := getInput()
 	fmt.Printf("Part One - Sum of yes questions: %d\n", partOne(inputVal))
-	fmt.Printf("Part Tow - Sum of yes questions for everyone: %d", partTwo(inputVal))
+	fmt.Printf("Part Two - Sum of yes questions for everyone: %d", partTwo(inputVal))
 }
