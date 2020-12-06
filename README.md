@@ -9,3 +9,4 @@ My attempts to follow along with the [Advent of Code](https://adventofcode.com) 
 * Day 3 - Traverse a grid of trees at a given slope, [solution](./2020/day3.go).
 * Day 4 - Validate passports given certain constraints, [solution](./2020/day4.go).
 * Day 5 - Find your seat on an airplane given an encoded boarding pass, [solution](./2020/day5.go).
+* Day 6 - Count the unique number of "yes" questions on customs form, [solution](./2020/day6.go).
