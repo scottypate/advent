@@ -5,8 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 	"path/filepath"
-	// "regexp"
-	// "strconv"
 	"strings"
 )
 
