@@ -14,7 +14,7 @@ type Coordinates struct {
 
 // Read the input file.
 func getInput() []string {
-	filepath, err := filepath.Abs("2020/inputs/day3.txt")
+	filepath, err := filepath.Abs("2020/inputs/day03.txt")
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -11,7 +11,7 @@ import (
 
 // Read the input file.
 func getInput() []string {
-	filepath, err := filepath.Abs("2020/inputs/day5.txt")
+	filepath, err := filepath.Abs("2020/inputs/day05.txt")
 	if err != nil {
 		log.Fatal(err)
 	}

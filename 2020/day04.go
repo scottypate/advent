@@ -12,7 +12,7 @@ import (
 
 // Read the input file.
 func getInput() []string {
-	filepath, err := filepath.Abs("2020/inputs/day4.txt")
+	filepath, err := filepath.Abs("2020/inputs/day04.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
