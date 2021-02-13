@@ -58,9 +58,9 @@ func partOne(intSlice []int, searchVal int) int {
 // Find the 3 values in the slice that add up to the searchVal.
 func partTwo(intSlice []int, searchVal int) int {
 	var returnVal int
-	for i1, element1 := range intSlice {
-		for i2, element2 := range intSlice {
-			if i1 == i2 {
+	for i, element1 := range intSlice {
+		for ii, element2 := range intSlice {
+			if i == ii {
 				continue
 			}
 			complement := searchVal - (element1 + element2)

@@ -58,8 +58,8 @@ func partTwo(inputVal []string, answer int) int {
 		int1, _ := strconv.Atoi(inputVal[i])
 		total := int1
 		vals := []int{int1}
-		for j := i + 1; j < len(inputVal); j++ {
-			int2, _ := strconv.Atoi(inputVal[j])
+		for ii := i + 1; ii < len(inputVal); ii++ {
+			int2, _ := strconv.Atoi(inputVal[ii])
 			vals = append(vals, int2)
 			total += int2
 			if total > answer {

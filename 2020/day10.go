@@ -12,7 +12,7 @@ import (
 
 // Read the input file.
 func getInput() []string {
-	filepath, err := filepath.Abs("2020/inputs/day10.txt")
+	filepath, err := filepath.Abs("2020/inputs/day10test.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -24,16 +24,26 @@ func getInput() []string {
 	return strings.Split(string(inputVal), "\n")
 }
 
-// Find the voltage differences given a list of adapters.
-func partOne(inputVal []string) int {
-	var voltages []int
-	voltageGaps := make(map[int]int)
+func convertList(inputVal []string) []int {
+	var returnVal []int
 
 	for _, element := range inputVal {
-		voltage, _ := strconv.Atoi(element)
-		voltages = append(voltages, voltage)
+		convertedElement, err := strconv.Atoi(element)
+		
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		returnVal = append(returnVal, convertedElement)
 	}
-	sort.Ints(voltages)
+	sort.Ints(returnVal)
+
+	return returnVal
+}
+
+// Find the voltage differences given a list of adapters.
+func partOne(voltages []int) int {
+	voltageGaps := make(map[int]int)
 
 	for i, element := range voltages {
 		if i == 0 {
@@ -49,8 +59,32 @@ func partOne(inputVal []string) int {
 	return gapProduct
 }
 
+// Find how many possible combinations of adapters can exist
+func partTwo(voltages []int) int {
+
+	allCombinations := 1
+
+	for i, element := range voltages {
+		nCombinations := 0
+   		for ii := 1; ii < 4; ii++ {
+   			if i + ii >= len(voltages) {
+   				continue
+   			}
+   			diff := voltages[i + ii] - element
+   			if diff <= 3 {
+   				nCombinations++
+   			}
+   		}
+   		allCombinations *= nCombinations
+	}
+	return allCombinations
+}
+
 func main() {
 	inputVal := getInput()
-	partOneAnswer := partOne(inputVal)
+	voltages := convertList(inputVal)
+	partOneAnswer := partOne(voltages)
+	partTwoAnswer := partTwo(voltages)
 	fmt.Printf("Part One - voltage gap product: %d\n", partOneAnswer)
+	fmt.Printf("Part Two - total combinations: %d\n", partTwoAnswer)
 }
