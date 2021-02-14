@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"log"
 	"path/filepath"
-	"strings"
 	"reflect"
+	"strings"
 )
 
 type seatPosition struct {
@@ -38,83 +38,101 @@ func getInput() []string {
 	return strings.Split(string(inputVal), "\n")
 }
 
-// Return the number of adjacent seats that are occupied.
-func adjacentSeats(inputVal []string, seatPostition seatPosition) int {
-	adjacentOccupied := 0
-	adjustments := []int{-1, 0, 1}
-	nRows := len(inputVal)
-	nSeats := len(inputVal[0])
-	for _, rowChange := range adjustments {
-		for _, seatChange := range adjustments {
-			adjacentSeat := adjustSeat(
-				seatPostition, 
-				seatAdjustment{rowChange, seatChange},
-			)
-			if adjacentSeat == seatPostition {
-				continue
-			} else if adjacentSeat.row >= nRows || adjacentSeat.row < 0 {
-				continue
-			} else if adjacentSeat.seat >= nSeats || adjacentSeat.seat < 0 {
-				continue
-			}
-			seatStatus := inputVal[adjacentSeat.row][adjacentSeat.seat]
-			if seatStatus == '#' {
-				adjacentOccupied++
-			}
-		}
-	}
-	return adjacentOccupied
-}
-
 // Return bool value for whether or not a seat in the direction of the initialAdjustment is occupied.
-func directionalSeatOccupied(inputVal []string, seatPostition seatPosition, initialAdjustment seatAdjustment) bool {
+// If the adjacent parameter is true, then only examine the seat adjacent to the seatPosition.
+func seatOccupancy(inputVal []string, seatPostition seatPosition, initialAdjustment seatAdjustment, adjacent bool) bool {
 	nRows := len(inputVal)
 	nSeats := len(inputVal[0])
+
 	for i := 0; true; i++ {
 		adjustment := seatAdjustment{
 			initialAdjustment.rowChange + (initialAdjustment.rowChange * i),
 			initialAdjustment.seatChange + (initialAdjustment.seatChange * i),
 		}
 		directionalSeat := adjustSeat(seatPostition, adjustment)
-
-		if directionalSeat.row >= nRows || directionalSeat.row < 0 {
+		//Break the loop if the directional adjustment is out of range of available seats.
+		if directionalSeat.row >= nRows || directionalSeat.row < 0 || directionalSeat.seat >= nSeats || directionalSeat.seat < 0 {
 			break
-		} else if directionalSeat.seat >= nSeats || directionalSeat.seat < 0 {
-			break
-		} else if inputVal[directionalSeat.row][directionalSeat.seat] == '.' {
+		}
+		seatValue := inputVal[directionalSeat.row][directionalSeat.seat]
+		if seatValue == '.' && adjacent {
+			return false
+		} else if seatValue == '.' && !adjacent {
 			continue
-		} else if inputVal[directionalSeat.row][directionalSeat.seat] == '#' {
+		} else if seatValue == '#' {
 			return true
-		} else if inputVal[directionalSeat.row][directionalSeat.seat] == 'L' {
+		} else if seatValue == 'L' {
 			return false
 		}
 	}
 	return false
 }
 
+// Return the number of seats that are occupied
+func countOccupiedSeats(inputVal []string, seat seatPosition, adjacent bool) int {
+	nOccupied := 0
+	adjustments := []int{-1, 0, 1}
+	for _, rowChange := range adjustments {
+		for _, seatChange := range adjustments {
+			if rowChange == 0 && seatChange == 0 {
+				continue
+			}
+			initialAdjustment := seatAdjustment{
+				rowChange,
+				seatChange,
+			}
+			seatStatus := seatOccupancy(
+				inputVal, seat, initialAdjustment, adjacent,
+			)
+			if seatStatus {
+				nOccupied++
+			}
+		}
+	}
+	return nOccupied
+}
+
 // Execute 1 round of seats being filled
 func fillAdjacentSeats(inputVal []string) ([]string, int) {
-	nOccupied := 0
+	runningSum := 0
 	filledSeats := make([]string, len(inputVal))
 	for i, row := range inputVal {
 		byteSlice := []byte(row)
-        	for ii, seat := range byteSlice {
-        		if seat == '.' {
-        			continue
-        		}
-        		adjacentOccupied := adjacentSeats(inputVal, seatPosition{i, ii})
-        		if seat == 'L' && adjacentOccupied == 0 {
-        			byteSlice[ii] = '#'
-        			nOccupied++
-        		} else if seat == '#' && adjacentOccupied >= 4 {
-        			byteSlice[ii] = 'L'
-        		} else if seat == '#' && adjacentOccupied < 4 {
-        			nOccupied++
-        		}
-        	}
-        	filledSeats[i] = string(byteSlice)
-        }
-        return filledSeats, nOccupied
+		for ii, seat := range byteSlice {
+			nOccupied := countOccupiedSeats(inputVal, seatPosition{i, ii}, true)
+			if seat == 'L' && nOccupied == 0 {
+				byteSlice[ii] = '#'
+				runningSum++
+			} else if seat == '#' && nOccupied >= 4 {
+				byteSlice[ii] = 'L'
+			} else if seat == '#' && nOccupied < 4 {
+				runningSum++
+			}
+		}
+		filledSeats[i] = string(byteSlice)
+	}
+	return filledSeats, runningSum
+}
+
+func fillDirectionalSeats(inputVal []string) ([]string, int) {
+	runningSum := 0
+	filledSeats := make([]string, len(inputVal))
+	for i, row := range inputVal {
+		byteSlice := []byte(row)
+		for ii, seat := range byteSlice {
+			nOccupied := countOccupiedSeats(inputVal, seatPosition{i, ii}, false)
+			if seat == 'L' && nOccupied == 0 {
+				byteSlice[ii] = '#'
+				runningSum++
+			} else if seat == '#' && nOccupied >= 5 {
+				byteSlice[ii] = 'L'
+			} else if seat == '#' && nOccupied < 5 {
+				runningSum++
+			}
+		}
+		filledSeats[i] = string(byteSlice)
+	}
+	return filledSeats, runningSum
 }
 
 // Apply a set of rules to a map of seats until no changes occur.
@@ -123,7 +141,6 @@ func partOne(inputVal []string) int {
 	var startingSeats []string
 	changedSeats, nOccupied := fillAdjacentSeats(inputVal)
 	for {
-
 		if reflect.DeepEqual(changedSeats, startingSeats) {
 			return nOccupied
 		}
@@ -133,18 +150,15 @@ func partOne(inputVal []string) int {
 	return 0
 }
 
-// Apply a set of rules to a map of seats until no changes occur.
-// When no further changes occur, return the number of Occupied seats (#).
 func partTwo(inputVal []string) int {
 	var startingSeats []string
-	changedSeats, nOccupied := fillSeats(inputVal)
+	changedSeats, nOccupied := fillDirectionalSeats(inputVal)
 	for {
-
 		if reflect.DeepEqual(changedSeats, startingSeats) {
 			return nOccupied
 		}
 		startingSeats = changedSeats
-		changedSeats, nOccupied = fillSeats(changedSeats)
+		changedSeats, nOccupied = fillDirectionalSeats(changedSeats)
 	}
 	return 0
 }
@@ -152,5 +166,7 @@ func partTwo(inputVal []string) int {
 func main() {
 	inputVal := getInput()
 	partOneAnswer := partOne(inputVal)
+	partTwoAnswer := partTwo(inputVal)
 	fmt.Printf("Part One - Number of Occupied Seats: %d\n", partOneAnswer)
+	fmt.Printf("Part Two - Number of Occupied Seats: %d\n", partTwoAnswer)
 }

@@ -29,7 +29,7 @@ func convertList(inputVal []string) []int {
 
 	for _, element := range inputVal {
 		convertedElement, err := strconv.Atoi(element)
-		
+
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -66,16 +66,16 @@ func partTwo(voltages []int) int {
 
 	for i, element := range voltages {
 		nCombinations := 0
-   		for ii := 1; ii < 4; ii++ {
-   			if i + ii >= len(voltages) {
-   				continue
-   			}
-   			diff := voltages[i + ii] - element
-   			if diff <= 3 {
-   				nCombinations++
-   			}
-   		}
-   		allCombinations *= nCombinations
+		for ii := 1; ii < 4; ii++ {
+			if i+ii >= len(voltages) {
+				continue
+			}
+			diff := voltages[i+ii] - element
+			if diff <= 3 {
+				nCombinations++
+			}
+		}
+		allCombinations *= nCombinations
 	}
 	return allCombinations
 }
