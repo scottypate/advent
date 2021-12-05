@@ -14,3 +14,8 @@ My attempts to follow along with the [Advent of Code](https://adventofcode.com) 
 * Day 8 - Troubleshoot a set of boot instructions, [solution](./2020/day08.go).
 * Day 9 - Unencrypt data given an algorithm, [solution](./2020/day09.go).
 * Day 10 - Figure out combinations of voltage adapters, [solution](./2020/day10.go).
+
+### 2021
+
+* Day 1 - Count the number of increasing values compared to a previously given value, [solution](./2021/day01.go). 
+* Day 2 - Track position on a cartesian coordinate system given a set of instructions, [solution](./2021/day02.go).
